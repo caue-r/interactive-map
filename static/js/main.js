@@ -14,6 +14,14 @@
         popupAnchor: [0, -28],
         className: "westeros-pin",
     });
+    L.Icon.Default.mergeOptions({
+        iconUrl: "static/img/pin.svg",
+        iconRetinaUrl: "static/img/pin.svg",
+        shadowUrl: null,
+        iconSize: [26, 32],
+        iconAnchor: [13, 32],
+        popupAnchor: [0, -28],
+    });
     const markers = [];
     let drawnItems = null;
     let drawControl = null;
