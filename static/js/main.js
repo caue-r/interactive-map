@@ -4,6 +4,16 @@
     const clearDrawButton = document.getElementById("clear-draw");
     const drawColorInput = document.getElementById("draw-color");
     const swatches = document.querySelectorAll(".swatch[data-color]");
+    const exportButton = document.getElementById("export-json");
+    const importButton = document.getElementById("import-json");
+    const importInput = document.getElementById("import-file");
+    const markerIcon = L.icon({
+        iconUrl: "static/img/pin.svg",
+        iconSize: [26, 32],
+        iconAnchor: [13, 32],
+        popupAnchor: [0, -28],
+        className: "westeros-pin",
+    });
     const markers = [];
     let drawnItems = null;
     let drawControl = null;
@@ -26,7 +36,7 @@
                 </label>
                 <p class="coords">Coordenadas: ${coords}</p>
                 <div class="form-actions">
-                    <button type="submit">Salvar</button>
+                    <button type="button" data-action="save">Salvar</button>
                     <button type="button" data-action="delete">Excluir</button>
                 </div>
             </form>
@@ -37,9 +47,11 @@
         const form = popup._contentNode?.querySelector("form.marker-form");
         if (!form) return;
 
+        form.addEventListener("submit", (event) => event.preventDefault());
         const deleteButton = form.querySelector('button[data-action="delete"]');
+        const saveButton = form.querySelector('button[data-action="save"]');
 
-        form.addEventListener("submit", (event) => {
+        saveButton?.addEventListener("click", (event) => {
             event.preventDefault();
             const formData = new FormData(form);
             entry.name = (formData.get("name") || "").trim() || entry.name;
@@ -97,10 +109,15 @@
                 latlng: event.latlng,
             };
 
-            const marker = L.marker(event.latlng).addTo(map);
+            const marker = L.marker(event.latlng, { icon: markerIcon }).addTo(map);
             entry.marker = marker;
             marker.bindPopup(buildPopupContent(entry), { autoPan: true }).openPopup();
 
+            // Garante handlers já no primeiro abrir e em reaberturas
+            const initialPopup = marker.getPopup();
+            if (initialPopup) {
+                attachPopupHandlers(initialPopup, entry);
+            }
             marker.on("popupopen", (evt) => attachPopupHandlers(evt.popup, entry));
             markers.push(entry);
         });
@@ -117,6 +134,9 @@
                 }
             });
         });
+        exportButton?.addEventListener("click", exportJson);
+        importButton?.addEventListener("click", () => importInput?.click());
+        importInput?.addEventListener("change", handleImportFile);
     }
 
     function clearDrawings() {
@@ -175,6 +195,111 @@
         if (!color || !drawColorInput) return;
         drawColorInput.value = color;
         drawColorInput.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+
+    function exportJson() {
+        const data = {
+            baseImage: imageUrl,
+            generatedAt: new Date().toISOString(),
+            markers: markers.map((m) => ({
+                id: m.id,
+                name: m.name,
+                description: m.description,
+                lat: m.latlng.lat,
+                lng: m.latlng.lng,
+            })),
+            drawings: exportDrawings(),
+        };
+
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "mapa-westeros.json";
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    function exportDrawings() {
+        if (!drawnItems) return [];
+        const features = [];
+        drawnItems.eachLayer((layer) => {
+            if (!layer.toGeoJSON) return;
+            const geo = layer.toGeoJSON();
+            geo.properties = geo.properties || {};
+            geo.properties.style = extractStyle(layer.options || {});
+            features.push(geo);
+        });
+        return features;
+    }
+
+    function extractStyle(options) {
+        return {
+            color: options.color || drawColorInput?.value || "#f59e0b",
+            weight: options.weight ?? 3,
+            opacity: options.opacity ?? 0.9,
+            fillColor: options.fillColor || options.color || drawColorInput?.value || "#f59e0b",
+            fillOpacity: options.fillOpacity ?? 0.3,
+        };
+    }
+
+    function handleImportFile(event) {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = () => {
+            try {
+                const json = JSON.parse(reader.result);
+                applyImport(json);
+            } catch (err) {
+                alert("Não foi possível ler o JSON. Verifique o arquivo.");
+            } finally {
+                importInput.value = "";
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    function applyImport(data) {
+        if (!data) return;
+        clearDrawings();
+        clearMarkers();
+
+        if (Array.isArray(data.markers)) {
+            data.markers.forEach((m) => addImportedMarker(m));
+        }
+
+        if (Array.isArray(data.drawings)) {
+            addImportedDrawings(data.drawings);
+        }
+
+        const maxId = markers.reduce((max, m) => Math.max(max, m.id || 0), 0);
+        markerCounter = maxId + 1;
+    }
+
+    function addImportedMarker(m) {
+        if (!m || typeof m.lat !== "number" || typeof m.lng !== "number") return;
+        const entry = {
+            id: m.id ?? markerCounter++,
+            name: m.name || `Marcador ${markerCounter}`,
+            description: m.description || "",
+            latlng: L.latLng(m.lat, m.lng),
+        };
+
+        const marker = L.marker(entry.latlng, { icon: markerIcon }).addTo(mapInstance);
+        entry.marker = marker;
+        marker.bindPopup(buildPopupContent(entry), { autoPan: true });
+        marker.on("popupopen", (evt) => attachPopupHandlers(evt.popup, entry));
+        markers.push(entry);
+    }
+
+    function addImportedDrawings(features) {
+        if (!drawnItems) return;
+        const geoJson = L.geoJSON(features, {
+            style: (feature) => feature?.properties?.style || shapeOptions(),
+        });
+        geoJson.eachLayer((layer) => drawnItems.addLayer(layer));
     }
 
     function toggleCanvasVisibility(show) {

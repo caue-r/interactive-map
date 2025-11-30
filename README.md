@@ -23,3 +23,4 @@ Troque a imagem base substituindo `static/img/Westeros.png`.
 - `static/js/leaflet.js` e `static/css/leaflet.css`: Leaflet local.
 - `static/js/leaflet.draw.js` e `static/css/leaflet.draw.css`: Leaflet.draw local.
 - `static/img/Westeros.png`: imagem do mapa.
+- `static/img/pin.svg`: ícone usado nos marcadores.
