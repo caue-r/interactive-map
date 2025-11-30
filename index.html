@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mapa Interativo de Westeros</title>
+    <link rel="stylesheet" href="static/css/leaflet.css">
+    <link rel="stylesheet" href="static/css/leaflet.draw.css">
+    <link rel="stylesheet" href="static/css/styles.css">
+</head>
+<body>
+    <header class="page-header">
+        <div>
+            <p class="eyebrow">Protótipo</p>
+            <h1>Mapa Interativo de Westeros</h1>
+            <p class="lede">Pins, popups e ferramentas de desenho (linhas, áreas, retângulos, círculos).</p>
+        </div>
+    </header>
+
+    <main class="layout">
+        <section class="map-wrapper">
+            <div id="map" aria-label="Mapa interativo de Westeros"></div>
+            <p class="hint">Se o mapa não aparecer, confira se o arquivo <code>static/img/Westeros.png</code> está presente.</p>
+        </section>
+
+        <section class="panel">
+            <h2>Como usar</h2>
+            <ul>
+                <li>Botão direito: cria marcador com nome e descrição.</li>
+                <li>Barra de desenho (canto superior esquerdo): linhas, polígonos, retângulos, círculos e edições.</li>
+                <li>Botão “Limpar desenhos” remove tudo que foi desenhado.</li>
+                <li>Troque a imagem base em <code>static/img/Westeros.png</code>.</li>
+            </ul>
+            <div class="control buttons">
+                <button id="clear-draw" type="button">Limpar desenhos</button>
+                <button id="clear-markers" type="button" class="button-secondary">Limpar marcadores</button>
+            </div>
+
+            <div class="control-group">
+                <label class="color-label" for="draw-color">Cor dos desenhos</label>
+                <input id="draw-color" type="color" value="#f59e0b">
+            </div>
+
+            <div class="swatches" aria-label="Selecione uma cor para desenhar">
+                <div class="swatch" data-color="#184a47" style="--swatch:#184a47;" role="button" tabindex="0" aria-label="Cor #184a47"></div>
+                <div class="swatch" data-color="#701918" style="--swatch:#701918;" role="button" tabindex="0" aria-label="Cor #701918"></div>
+            </div>
+        </section>
+    </main>
+
+    <script src="static/js/leaflet.js"></script>
+    <script src="static/js/leaflet.draw.js"></script>
+    <script>
+        window.WESTEROS_IMAGE = "static/img/Westeros.png";
+    </script>
+    <script src="static/js/main.js"></script>
+</body>
+</html>

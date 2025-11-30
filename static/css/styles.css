@@ -1,0 +1,308 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600&display=swap");
+
+:root {
+    --bg: #0f172a;
+    --panel: #0b1221;
+    --accent: #f59e0b;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --border: #1e293b;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Space Grotesk", "Segoe UI", system-ui, -apple-system, sans-serif;
+    background: radial-gradient(circle at 20% 20%, rgba(245, 158, 11, 0.12), transparent 25%), linear-gradient(135deg, #0f172a 0%, #0a0f1c 50%, #0f172a 100%);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+a {
+    color: var(--accent);
+}
+
+.page-header {
+    padding: 24px clamp(16px, 3vw, 32px);
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.8) 0%, rgba(11, 18, 33, 0.9) 100%);
+}
+
+.eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin: 0 0 4px;
+    font-size: 12px;
+}
+
+h1 {
+    margin: 0 0 8px;
+    font-size: clamp(26px, 3vw, 34px);
+}
+
+.lede {
+    margin: 0;
+    color: var(--muted);
+    max-width: 900px;
+}
+
+.layout {
+    display: grid;
+    gap: 16px;
+    padding: 16px;
+    grid-template-columns: minmax(460px, 3fr) minmax(280px, 1fr);
+    align-items: start;
+}
+
+.panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+}
+
+.panel h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.panel ul {
+    color: var(--muted);
+    padding-left: 18px;
+}
+
+.panel li + li {
+    margin-top: 6px;
+}
+
+.control.buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 8px;
+}
+
+.control.buttons button {
+    width: 100%;
+}
+
+.control-group {
+    margin-top: 12px;
+    display: grid;
+    gap: 8px;
+}
+
+.color-label {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.control-group input[type="color"] {
+    width: 52px;
+    height: 32px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #0f172a;
+    padding: 0;
+}
+
+.swatches {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.swatch {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--swatch, #184a47);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+}
+
+.swatch:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+button {
+    background: var(--accent);
+    border: none;
+    color: #1f2937;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 30px rgba(245, 158, 11, 0.25);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+.active {
+    box-shadow: 0 10px 30px rgba(245, 158, 11, 0.4);
+}
+
+.button-secondary {
+    background: #0f172a;
+    color: var(--text);
+    border: 1px solid var(--border);
+}
+
+.map-wrapper {
+    min-height: 420px;
+    background: #0c1325;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 0;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+}
+
+#map {
+    width: 100%;
+    height: min(80vh, 820px);
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+}
+
+.leaflet-container {
+    background: #22292b;
+}
+
+.leaflet-popup-content {
+    margin: 8px 12px 12px;
+}
+
+.marker-form {
+    display: grid;
+    gap: 8px;
+    min-width: 220px;
+}
+
+.marker-form label {
+    display: grid;
+    gap: 4px;
+    font-size: 14px;
+    color: var(--muted);
+}
+
+.marker-form input,
+.marker-form textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: #0f172a;
+    color: var(--text);
+    font-family: inherit;
+}
+
+.marker-form textarea {
+    resize: vertical;
+}
+
+.marker-form .coords {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.form-actions button {
+    flex: 1;
+}
+
+.hint {
+    margin: 10px 0 0;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+@media (max-width: 640px) {
+    .layout {
+        grid-template-columns: 1fr;
+    }
+
+    #map {
+        height: 60vh;
+    }
+}
+
+.leaflet-draw-toolbar a {
+    background: var(--panel);
+    border-color: var(--border);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 18px 18px;
+    position: relative;
+    overflow: hidden;
+    text-indent: -9999px; /* garante que nenhum texto/ícone default apareça */
+}
+
+.leaflet-draw-toolbar a:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+.leaflet-draw-toolbar a::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 18px;
+    height: 18px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+
+.leaflet-draw-toolbar .leaflet-draw-draw-polyline::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpolyline points='5,20 12,10 20,16 24,8' fill='none' stroke='%23f59e0b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+.leaflet-draw-toolbar .leaflet-draw-draw-polygon::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpolygon points='6,20 6,10 18,6 22,16' fill='%23f59e0b' fill-opacity='0.15' stroke='%23f59e0b' stroke-width='2.5' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+.leaflet-draw-toolbar .leaflet-draw-draw-rectangle::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Crect x='6' y='8' width='16' height='12' fill='%23f59e0b' fill-opacity='0.12' stroke='%23f59e0b' stroke-width='2.5' rx='2'/%3E%3C/svg%3E");
+}
+
+.leaflet-draw-toolbar .leaflet-draw-draw-circle::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Ccircle cx='14' cy='14' r='7' fill='%23f59e0b' fill-opacity='0.12' stroke='%23f59e0b' stroke-width='2.5'/%3E%3C/svg%3E");
+}
+
+.leaflet-draw-toolbar .leaflet-draw-edit-edit::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpath d='M8 19l2.2-6.2L17 6l3 3-7 6.8z' fill='%23f59e0b' fill-opacity='0.15' stroke='%23f59e0b' stroke-width='2.3' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+.leaflet-draw-toolbar .leaflet-draw-edit-remove::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cline x1='8' y1='8' x2='20' y2='20' stroke='%23f59e0b' stroke-width='2.5' stroke-linecap='round'/%3E%3Cline x1='8' y1='20' x2='20' y2='8' stroke='%23f59e0b' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+/* Alta densidade/retina */
+.leaflet-retina .leaflet-draw-toolbar a {
+    background-size: 18px 18px;
+}
