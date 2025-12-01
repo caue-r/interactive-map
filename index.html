@@ -9,11 +9,11 @@
     <link rel="stylesheet" href="static/css/styles.css">
 </head>
 <body>
-    <header class="page-header">
-        <div>
-            <p class="eyebrow">Protótipo</p>
-            <h1>Mapa Interativo de Westeros</h1>
-            <p class="lede">Pins, popups e ferramentas de desenho (linhas, áreas, retângulos, círculos).</p>
+    <header class="hero">
+        <div class="hero__content">
+            <div class="hero__pill">Westeros</div>
+            <h1>Mapa Interativo</h1>
+            <p class="hero__lede">Marque fortalezas, trace rotas e pinte territórios em um único lugar.</p>
         </div>
     </header>
 
@@ -29,7 +29,6 @@
                 <li>Botão direito: cria marcador com nome e descrição.</li>
                 <li>Barra de desenho (canto superior esquerdo): linhas, polígonos, retângulos, círculos e edições.</li>
                 <li>Botão “Limpar desenhos” remove tudo que foi desenhado.</li>
-                <li>Troque a imagem base em <code>static/img/Westeros.png</code>.</li>
             </ul>
             <div class="control buttons">
                 <button id="clear-draw" type="button">Limpar desenhos</button>
@@ -47,6 +46,8 @@
             <div class="swatches" aria-label="Selecione uma cor para desenhar">
                 <div class="swatch" data-color="#184a47" style="--swatch:#184a47;" role="button" tabindex="0" aria-label="Cor #184a47"></div>
                 <div class="swatch" data-color="#701918" style="--swatch:#701918;" role="button" tabindex="0" aria-label="Cor #701918"></div>
+                <div class="swatch" data-color="#000000" style="--swatch:#000000;" role="button" tabindex="0" aria-label="Cor preta"></div>
+                <div class="swatch" data-color="#ffffff" style="--swatch:#ffffff;" role="button" tabindex="0" aria-label="Cor branca"></div>
             </div>
         </section>
     </main>

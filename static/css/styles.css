@@ -1,12 +1,13 @@
 @import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600&display=swap");
 
 :root {
-    --bg: #0f172a;
-    --panel: #0b1221;
-    --accent: #f59e0b;
-    --text: #e2e8f0;
-    --muted: #94a3b8;
-    --border: #1e293b;
+    --bg: #050505;
+    --panel: #0d0d0f;
+    --accent: #9c1422;
+    --accent-strong: #b3121f;
+    --text: #f5f5f5;
+    --muted: #b3b3b3;
+    --border: #1a1a1d;
 }
 
 *,
@@ -18,7 +19,7 @@
 body {
     margin: 0;
     font-family: "Space Grotesk", "Segoe UI", system-ui, -apple-system, sans-serif;
-    background: radial-gradient(circle at 20% 20%, rgba(245, 158, 11, 0.12), transparent 25%), linear-gradient(135deg, #0f172a 0%, #0a0f1c 50%, #0f172a 100%);
+    background: radial-gradient(circle at 15% 20%, rgba(156, 20, 34, 0.18), transparent 25%), linear-gradient(135deg, #050505 0%, #0b0b0d 50%, #050505 100%);
     color: var(--text);
     min-height: 100vh;
 }
@@ -27,29 +28,38 @@ a {
     color: var(--accent);
 }
 
-.page-header {
-    padding: 24px clamp(16px, 3vw, 32px);
+.hero {
+    padding: clamp(10px, 2vw, 16px) clamp(12px, 3vw, 24px);
+    display: grid;
+    place-items: center;
+    text-align: center;
+    background: linear-gradient(135deg, #0b0b0d 0%, #0e0e11 50%, #0b0b0d 100%);
     border-bottom: 1px solid var(--border);
-    background: linear-gradient(180deg, rgba(15, 23, 42, 0.8) 0%, rgba(11, 18, 33, 0.9) 100%);
 }
 
-.eyebrow {
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--muted);
-    margin: 0 0 4px;
-    font-size: 12px;
+.hero__content h1 {
+    margin: 6px 0 4px;
+    font-size: clamp(24px, 3vw, 32px);
 }
 
-h1 {
-    margin: 0 0 8px;
-    font-size: clamp(26px, 3vw, 34px);
-}
-
-.lede {
+.hero__lede {
     margin: 0;
     color: var(--muted);
-    max-width: 900px;
+    max-width: 640px;
+}
+
+.hero__pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(179, 18, 31, 0.14);
+    color: var(--accent-strong);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    font-size: 12px;
 }
 
 .layout {
@@ -108,7 +118,7 @@ h1 {
     height: 32px;
     border: 1px solid var(--border);
     border-radius: 8px;
-    background: #0f172a;
+    background: #0b0b0d;
     padding: 0;
 }
 
@@ -129,14 +139,14 @@ h1 {
 }
 
 .swatch:focus-visible {
-    outline: 2px solid var(--accent);
+    outline: 2px solid var(--accent-strong);
     outline-offset: 2px;
 }
 
 button {
-    background: var(--accent);
+    background: var(--accent-strong);
     border: none;
-    color: #1f2937;
+    color: #fdfdfd;
     padding: 10px 14px;
     border-radius: 10px;
     font-weight: 600;
@@ -146,7 +156,7 @@ button {
 
 button:hover {
     transform: translateY(-1px);
-    box-shadow: 0 10px 30px rgba(245, 158, 11, 0.25);
+    box-shadow: 0 10px 30px rgba(179, 18, 31, 0.3);
 }
 
 button:active {
@@ -154,18 +164,18 @@ button:active {
 }
 
 .active {
-    box-shadow: 0 10px 30px rgba(245, 158, 11, 0.4);
+    box-shadow: 0 10px 30px rgba(179, 18, 31, 0.4);
 }
 
 .button-secondary {
-    background: #0f172a;
+    background: #111114;
     color: var(--text);
     border: 1px solid var(--border);
 }
 
 .map-wrapper {
     min-height: 420px;
-    background: #0c1325;
+    background: #0b0b0d;
     border: 1px solid var(--border);
     border-radius: 14px;
     padding: 0;
@@ -183,7 +193,7 @@ button:active {
 }
 
 .leaflet-container {
-    background: #22292b;
+    background: #161616;
 }
 
 .leaflet-popup-content {
@@ -262,8 +272,8 @@ button:active {
 }
 
 .leaflet-draw-toolbar a:hover {
-    background: var(--accent);
-    border-color: var(--accent);
+    background: var(--accent-strong);
+    border-color: var(--accent-strong);
 }
 
 .leaflet-draw-toolbar a::before {
@@ -279,27 +289,27 @@ button:active {
 }
 
 .leaflet-draw-toolbar .leaflet-draw-draw-polyline::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpolyline points='5,20 12,10 20,16 24,8' fill='none' stroke='%23f59e0b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpolyline points='5,20 12,10 20,16 24,8' fill='none' stroke='%23b3121f' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 
 .leaflet-draw-toolbar .leaflet-draw-draw-polygon::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpolygon points='6,20 6,10 18,6 22,16' fill='%23f59e0b' fill-opacity='0.15' stroke='%23f59e0b' stroke-width='2.5' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpolygon points='6,20 6,10 18,6 22,16' fill='%23b3121f' fill-opacity='0.15' stroke='%23b3121f' stroke-width='2.5' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 
 .leaflet-draw-toolbar .leaflet-draw-draw-rectangle::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Crect x='6' y='8' width='16' height='12' fill='%23f59e0b' fill-opacity='0.12' stroke='%23f59e0b' stroke-width='2.5' rx='2'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Crect x='6' y='8' width='16' height='12' fill='%23b3121f' fill-opacity='0.12' stroke='%23b3121f' stroke-width='2.5' rx='2'/%3E%3C/svg%3E");
 }
 
 .leaflet-draw-toolbar .leaflet-draw-draw-circle::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Ccircle cx='14' cy='14' r='7' fill='%23f59e0b' fill-opacity='0.12' stroke='%23f59e0b' stroke-width='2.5'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Ccircle cx='14' cy='14' r='7' fill='%23b3121f' fill-opacity='0.12' stroke='%23b3121f' stroke-width='2.5'/%3E%3C/svg%3E");
 }
 
 .leaflet-draw-toolbar .leaflet-draw-edit-edit::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpath d='M8 19l2.2-6.2L17 6l3 3-7 6.8z' fill='%23f59e0b' fill-opacity='0.15' stroke='%23f59e0b' stroke-width='2.3' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpath d='M8 19l2.2-6.2L17 6l3 3-7 6.8z' fill='%23b3121f' fill-opacity='0.15' stroke='%23b3121f' stroke-width='2.3' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 
 .leaflet-draw-toolbar .leaflet-draw-edit-remove::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cline x1='8' y1='8' x2='20' y2='20' stroke='%23f59e0b' stroke-width='2.5' stroke-linecap='round'/%3E%3Cline x1='8' y1='20' x2='20' y2='8' stroke='%23f59e0b' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cline x1='8' y1='8' x2='20' y2='20' stroke='%23b3121f' stroke-width='2.5' stroke-linecap='round'/%3E%3Cline x1='8' y1='20' x2='20' y2='8' stroke='%23b3121f' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E");
 }
 
 /* Alta densidade/retina */
