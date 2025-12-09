@@ -1,7 +1,7 @@
 (() => {
     const MAPS = [
         { id: "westeros", name: "Westeros", imageUrl: window.WESTEROS_IMAGE },
-        { id: "sword-coast", name: "Costa da Espada", imageUrl: "static/img/SwordCoast.svg" },
+        { id: "sword-coast", name: "Costa da Espada", imageUrl: "static/img/SwordCoast.jpg" },
     ];
 
     const clearMarkersButton = document.getElementById("clear-markers");

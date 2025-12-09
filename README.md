@@ -8,7 +8,7 @@ Protótipo estático de um mapa customizado usando Leaflet e Leaflet.draw com se
 - Opção 2: sirva como site estático (`npx serve .` ou extensão Live Server).
 
 - Escolha o mapa base no seletor "Mapa base" (Westeros ou Costa da Espada).
-- Troque as imagens base substituindo `static/img/Westeros.png` ou `static/img/SwordCoast.svg`.
+- Troque as imagens base substituindo `static/img/Westeros.png` ou `static/img/SwordCoast.jpg`.
 
 ## Funcionalidades
 
@@ -24,5 +24,5 @@ Protótipo estático de um mapa customizado usando Leaflet e Leaflet.draw com se
 - `static/js/leaflet.js` e `static/css/leaflet.css`: Leaflet local.
 - `static/js/leaflet.draw.js` e `static/css/leaflet.draw.css`: Leaflet.draw local.
 - `static/img/Westeros.png`: imagem do mapa de Westeros.
-- `static/img/SwordCoast.svg`: imagem do mapa da Costa da Espada.
+- `static/img/SwordCoast.jpg`: imagem do mapa da Costa da Espada.
 - `static/img/pin.svg`: ícone usado nos marcadores.
