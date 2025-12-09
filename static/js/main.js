@@ -1,12 +1,20 @@
 (() => {
-    const imageUrl = window.WESTEROS_IMAGE;
+    const MAPS = [
+        { id: "westeros", name: "Westeros", imageUrl: window.WESTEROS_IMAGE },
+        { id: "sword-coast", name: "Costa da Espada", imageUrl: "static/img/SwordCoast.svg" },
+    ];
+
     const clearMarkersButton = document.getElementById("clear-markers");
     const clearDrawButton = document.getElementById("clear-draw");
     const drawColorInput = document.getElementById("draw-color");
+    const mapSelect = document.getElementById("map-select");
+    const heroPill = document.querySelector(".hero__pill");
+    const mapContainer = document.getElementById("map");
     const swatches = document.querySelectorAll(".swatch[data-color]");
     const exportButton = document.getElementById("export-json");
     const importButton = document.getElementById("import-json");
     const importInput = document.getElementById("import-file");
+    const paintCanvas = document.getElementById("paint-canvas");
     const markerIcon = L.icon({
         iconUrl: "static/img/pin.svg",
         iconSize: [26, 32],
@@ -23,6 +31,8 @@
         popupAnchor: [0, -28],
     });
     const markers = [];
+    let currentMapId = MAPS[0].id;
+    let currentImageUrl = MAPS[0].imageUrl;
     let drawnItems = null;
     let drawControl = null;
     let markerCounter = 1;
@@ -100,7 +110,7 @@
         });
         mapInstance = map;
 
-        L.imageOverlay(imageUrl, bounds, { zIndex: 1 }).addTo(map);
+        L.imageOverlay(currentImageUrl, bounds, { zIndex: 1 }).addTo(map);
         map.fitBounds(bounds);
 
         drawnItems = new L.FeatureGroup();
@@ -129,22 +139,6 @@
             marker.on("popupopen", (evt) => attachPopupHandlers(evt.popup, entry));
             markers.push(entry);
         });
-
-        clearMarkersButton?.addEventListener("click", clearMarkers);
-        clearDrawButton?.addEventListener("click", clearDrawings);
-        drawColorInput?.addEventListener("change", resetDrawControl);
-        swatches.forEach((swatch) => {
-            swatch.addEventListener("click", () => selectSwatchColor(swatch.dataset.color));
-            swatch.addEventListener("keydown", (e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    selectSwatchColor(swatch.dataset.color);
-                }
-            });
-        });
-        exportButton?.addEventListener("click", exportJson);
-        importButton?.addEventListener("click", () => importInput?.click());
-        importInput?.addEventListener("change", handleImportFile);
     }
 
     function clearDrawings() {
@@ -207,7 +201,7 @@
 
     function exportJson() {
         const data = {
-            baseImage: imageUrl,
+            baseImage: currentImageUrl,
             generatedAt: new Date().toISOString(),
             markers: markers.map((m) => ({
                 id: m.id,
@@ -223,7 +217,7 @@
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = "mapa-westeros.json";
+        a.download = `mapa-${currentMapId}.json`;
         a.click();
         URL.revokeObjectURL(url);
     }
@@ -315,20 +309,83 @@
         paintCanvas.style.display = show ? "block" : "none";
     }
 
-    function bootstrap() {
+    function syncCanvas() {}
+
+    function destroyMap() {
+        mapInstance?.off();
+        mapInstance?.remove();
+        mapInstance = null;
+        drawnItems = null;
+        drawControl = null;
+        markers.splice(0, markers.length);
+        markerCounter = 1;
+        if (mapContainer) {
+            mapContainer.innerHTML = "";
+        }
+    }
+
+    function loadMap(mapId) {
+        const fallback = MAPS[0];
+        const config = MAPS.find((map) => map.id === mapId) || fallback;
+        currentMapId = config.id;
+        currentImageUrl = config.imageUrl;
+
+        if (heroPill) {
+            heroPill.textContent = config.name;
+        }
+        if (mapSelect && mapSelect.value !== currentMapId) {
+            mapSelect.value = currentMapId;
+        }
+        if (mapContainer) {
+            mapContainer.setAttribute("aria-label", `Mapa interativo de ${config.name}`);
+        }
+
+        destroyMap();
         const probe = new Image();
-        probe.src = imageUrl;
+        probe.src = currentImageUrl;
 
         probe.onload = () => {
-            initMap({ width: probe.naturalWidth, height: probe.naturalHeight });
-            // revalida tamanho da camada de pintura após o mapa definir o layout
+            const width = probe.naturalWidth || probe.width || 3000;
+            const height = probe.naturalHeight || probe.height || 2000;
+            initMap({ width, height });
             setTimeout(syncCanvas, 100);
         };
 
         probe.onerror = () => {
-            const mapContainer = document.getElementById("map");
-            mapContainer.innerHTML = "<p style='padding:12px'>Não foi possível carregar a imagem do mapa. Verifique se o arquivo static/img/Westeros.png existe.</p>";
+            if (mapContainer) {
+                mapContainer.innerHTML = `<p style='padding:12px'>Não foi possível carregar a imagem do mapa. Verifique se o arquivo ${currentImageUrl} existe.</p>`;
+            }
         };
+    }
+
+    function hydrateMapSelect() {
+        if (!mapSelect) return;
+        mapSelect.innerHTML = MAPS.map((map) => `<option value="${map.id}">${map.name}</option>`).join("");
+        mapSelect.value = currentMapId;
+        mapSelect.addEventListener("change", (event) => {
+            const targetId = event.target?.value || currentMapId;
+            loadMap(targetId);
+        });
+    }
+
+    function bootstrap() {
+        hydrateMapSelect();
+        clearMarkersButton?.addEventListener("click", clearMarkers);
+        clearDrawButton?.addEventListener("click", clearDrawings);
+        drawColorInput?.addEventListener("change", resetDrawControl);
+        swatches.forEach((swatch) => {
+            swatch.addEventListener("click", () => selectSwatchColor(swatch.dataset.color));
+            swatch.addEventListener("keydown", (e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    selectSwatchColor(swatch.dataset.color);
+                }
+            });
+        });
+        exportButton?.addEventListener("click", exportJson);
+        importButton?.addEventListener("click", () => importInput?.click());
+        importInput?.addEventListener("change", handleImportFile);
+        loadMap(currentMapId);
     }
 
     bootstrap();

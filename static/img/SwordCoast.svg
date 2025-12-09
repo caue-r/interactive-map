@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="3200" height="2200" viewBox="0 0 3200 2200" role="img" aria-label="Mapa ilustrativo da Costa da Espada">
+  <defs>
+    <linearGradient id="sea" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#dbe7f3" />
+      <stop offset="100%" stop-color="#b3c7d8" />
+    </linearGradient>
+    <linearGradient id="land" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#dfe9d1" />
+      <stop offset="100%" stop-color="#c7d6b3" />
+    </linearGradient>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#sea)" />
+  <rect x="1400" y="80" width="1700" height="2040" rx="24" ry="24" fill="url(#land)" stroke="#7a8b69" stroke-width="12" opacity="0.9" />
+  <rect x="60" y="60" width="3080" height="2080" fill="none" stroke="#455468" stroke-width="18" />
+  <text x="1600" y="1100" font-family="'Palatino Linotype', 'Book Antiqua', Palatino, serif" font-size="210" fill="#2f3f52" text-anchor="middle">Costa da Espada</text>
+  <text x="1600" y="1230" font-family="'Palatino Linotype', 'Book Antiqua', Palatino, serif" font-size="62" fill="#3e5165" text-anchor="middle">Mapa ilustrativo - substitua por arte oficial, se desejar</text>
+  <g opacity="0.42">
+    <circle cx="550" cy="420" r="110" fill="#fff" stroke="#6b7f8c" stroke-width="10" />
+    <circle cx="630" cy="540" r="80" fill="#fff" stroke="#6b7f8c" stroke-width="10" />
+    <circle cx="460" cy="570" r="95" fill="#fff" stroke="#6b7f8c" stroke-width="10" />
+    <circle cx="540" cy="690" r="70" fill="#fff" stroke="#6b7f8c" stroke-width="10" />
+    <circle cx="430" cy="750" r="60" fill="#fff" stroke="#6b7f8c" stroke-width="10" />
+  </g>
+  <g opacity="0.35">
+    <path d="M1750 450 Q2100 300 2350 520 T2850 780 Q2900 1050 2650 1200 T2100 1400 Q1800 1380 1700 1100 T1750 450" fill="#aec49a" stroke="#6f7f5e" stroke-width="10" />
+    <path d="M1900 1550 Q2200 1500 2500 1650 T2750 1900 Q2550 2050 2200 2000 T1900 1850 Q1800 1700 1900 1550" fill="#aec49a" stroke="#6f7f5e" stroke-width="10" />
+  </g>
+</svg>

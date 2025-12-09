@@ -108,6 +108,15 @@ a {
     gap: 8px;
 }
 
+.control-group select {
+    background: #111114;
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-weight: 600;
+}
+
 .color-label {
     color: var(--muted);
     font-size: 14px;

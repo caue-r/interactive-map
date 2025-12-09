@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Mapa Interativo de Westeros</title>
+    <title>Mapa Interativo</title>
     <link rel="stylesheet" href="static/css/leaflet.css">
     <link rel="stylesheet" href="static/css/leaflet.draw.css">
     <link rel="stylesheet" href="static/css/styles.css">
@@ -29,6 +29,15 @@
                 <li>Barra de desenho (canto superior esquerdo): linhas, polígonos, retângulos, círculos e edições.</li>
                 <li>Botão “Limpar desenhos” remove tudo que foi desenhado.</li>
             </ul>
+
+            <div class="control-group">
+                <label class="color-label" for="map-select">Mapa base</label>
+                <select id="map-select">
+                    <option value="westeros">Westeros</option>
+                    <option value="sword-coast">Costa da Espada</option>
+                </select>
+                <p class="hint">Alterar o mapa limpa marcadores e desenhos atuais.</p>
+            </div>
             <div class="control buttons">
                 <button id="clear-draw" type="button">Limpar desenhos</button>
                 <button id="clear-markers" type="button" class="button-secondary">Limpar marcadores</button>
