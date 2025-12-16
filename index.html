@@ -6,50 +6,61 @@
     <title>Mapa Interativo de Westeros</title>
     <link rel="stylesheet" href="static/css/leaflet.css">
     <link rel="stylesheet" href="static/css/leaflet.draw.css">
-    <link rel="stylesheet" href="static/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="static/css/got-theme.css">
 </head>
 <body>
-    <header class="hero">
-        <div class="hero__content">
-            <div class="hero__pill">Westeros</div>
-            <h1>Mapa de Conquistas</h1>
-            <p class="hero__lede"></p>
-        </div>
-    </header>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar__header">
+                <h1>Westeros</h1>
+                <p class="subtitle">Mapa de Conquistas</p>
+            </div>
+            
+            <div class="sidebar__content">
+                <section class="control-panel">
+                    <h2>Ordens de Batalha</h2>
+                    <p class="instruction">Use o botão direito no mapa para convocar estandartes.</p>
+                    
+                    <div class="actions-group">
+                        <button id="clear-draw" type="button" class="btn-got">Queimar Mapas</button>
+                        <button id="clear-markers" type="button" class="btn-got">Dispensar Tropas</button>
+                    </div>
 
-    <main class="layout">
-        <section class="map-wrapper">
+                    <div class="actions-group">
+                        <button id="export-json" type="button" class="btn-got secondary">Arquivar Corvo</button>
+                        <button id="import-json" type="button" class="btn-got secondary">Ler Pergaminho</button>
+                        <input id="import-file" type="file" accept="application/json" hidden>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="color-label" for="draw-color">Tinta do Meistre</label>
+                        <div class="color-picker-wrapper">
+                            <input id="draw-color" type="color" value="#f59e0b">
+                            <div class="swatches">
+                                <div class="swatch" data-color="#184a47" style="--swatch:#184a47;" role="button" tabindex="0" title="Verde Dragão"></div>
+                                <div class="swatch" data-color="#701918" style="--swatch:#701918;" role="button" tabindex="0" title="Sangue Lannister"></div>
+                                <div class="swatch" data-color="#1a1a1a" style="--swatch:#1a1a1a;" role="button" tabindex="0" title="Preto da Patrulha"></div>
+                                <div class="swatch" data-color="#f5f5f5" style="--swatch:#f5f5f5;" role="button" tabindex="0" title="Branco Caminhante"></div>
+                                <div class="swatch" data-color="#d4af37" style="--swatch:#d4af37;" role="button" tabindex="0" title="Ouro"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <div class="sidebar__footer">
+                <button id="theme-toggle" class="btn-got" style="width: 100%; margin-bottom: 1rem;">Modo Claro</button>
+                <p>Valar Morghulis</p>
+            </div>
+        </aside>
+
+        <main class="map-container">
             <div id="map" aria-label="Mapa interativo de Westeros"></div>
-        </section>
-
-        <section class="panel">
-            <h2>Guia Rápido</h2>
-            <ul>
-                <li>Botão direito abre o banquete de insígnias (dragão, pin, navio ou muralha).</li>
-                <li>A barra de desenho (canto superior esquerdo) marca rotas, muralhas e territórios.</li>
-                <li>Limpe desenhos ou marcadores quando a guerra precisar de um novo começo.</li>
-            </ul>
-            <div class="control buttons">
-                <button id="clear-draw" type="button">Limpar desenhos</button>
-                <button id="clear-markers" type="button" class="button-secondary">Limpar marcadores</button>
-                <button id="export-json" type="button" class="button-secondary">Exportar JSON</button>
-                <button id="import-json" type="button" class="button-secondary">Importar JSON</button>
-                <input id="import-file" type="file" accept="application/json" hidden>
-            </div>
-
-            <div class="control-group">
-                <label class="color-label" for="draw-color">Cor dos desenhos</label>
-                <input id="draw-color" type="color" value="#f59e0b">
-            </div>
-
-            <div class="swatches" aria-label="Selecione uma cor para desenhar">
-                <div class="swatch" data-color="#184a47" style="--swatch:#184a47;" role="button" tabindex="0" aria-label="Cor #184a47"></div>
-                <div class="swatch" data-color="#701918" style="--swatch:#701918;" role="button" tabindex="0" aria-label="Cor #701918"></div>
-                <div class="swatch" data-color="#000000" style="--swatch:#000000;" role="button" tabindex="0" aria-label="Cor preta"></div>
-                <div class="swatch" data-color="#ffffff" style="--swatch:#ffffff;" role="button" tabindex="0" aria-label="Cor branca"></div>
-            </div>
-        </section>
-    </main>
+        </main>
+    </div>
 
     <script src="static/js/leaflet.js"></script>
     <script src="static/js/leaflet.draw.js"></script>
