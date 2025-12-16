@@ -1,0 +1,406 @@
+:root {
+    --got-gold: #e2e8f0;
+    --got-gold-dim: #64748b;
+    --got-dark: #0f172a;
+    --got-darker: #020617;
+    --got-red: #1e293b;
+    --got-text: #e0e0e0;
+    --got-parchment: #f5f5dc;
+    --sidebar-width: 350px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Lato', sans-serif;
+    background: radial-gradient(circle at 50% 50%, var(--got-dark), var(--got-darker));
+    color: var(--got-text);
+    height: 100vh;
+    overflow: hidden;
+}
+
+h1, h2, h3, .hero__pill, button {
+    font-family: 'Cinzel', serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.app-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: var(--sidebar-width);
+    background: linear-gradient(to bottom, var(--got-dark), var(--got-darker));
+    border-right: 2px solid var(--got-gold);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+    z-index: 1000;
+    position: relative;
+}
+
+.sidebar__header {
+    padding: 2rem 1.5rem;
+    background: linear-gradient(to bottom, #1e293b, transparent);
+    border-bottom: 1px solid var(--got-gold);
+    text-align: center;
+}
+
+.sidebar__header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    color: var(--got-gold);
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+}
+
+.subtitle {
+    margin: 0.5rem 0 0;
+    font-style: italic;
+    color: rgba(255,255,255,0.8);
+}
+
+.sidebar__content {
+    flex: 1;
+    padding: 1.5rem;
+    overflow-y: auto;
+}
+
+.sidebar__footer {
+    padding: 1rem;
+    text-align: center;
+    border-top: 1px solid var(--got-gold-dim);
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    color: var(--got-gold-dim);
+}
+
+/* Controls */
+.control-panel h2 {
+    color: var(--got-gold);
+    border-bottom: 1px solid var(--got-gold-dim);
+    padding-bottom: 0.5rem;
+    margin-top: 0;
+}
+
+.instruction {
+    font-style: italic;
+    color: #aaa;
+    margin-bottom: 1.5rem;
+}
+
+.actions-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.btn-got {
+    flex: 1;
+    background: transparent;
+    border: 1px solid var(--got-gold);
+    color: var(--got-gold);
+    padding: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.btn-got:hover {
+    background: var(--got-gold);
+    color: var(--got-dark);
+    box-shadow: 0 0 10px var(--got-gold-dim);
+}
+
+.btn-got.secondary {
+    border-color: #666;
+    color: #aaa;
+}
+
+.btn-got.secondary:hover {
+    border-color: #aaa;
+    color: #fff;
+    background: #333;
+}
+
+.control-group {
+    margin-top: 2rem;
+}
+
+.color-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--got-gold);
+    font-family: 'Cinzel', serif;
+}
+
+.color-picker-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#draw-color {
+    background: none;
+    border: 1px solid var(--got-gold);
+    height: 40px;
+    width: 60px;
+    padding: 2px;
+    cursor: pointer;
+}
+
+.swatches {
+    display: flex;
+    gap: 5px;
+}
+
+.swatch {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: var(--swatch);
+    border: 1px solid #fff;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.swatch:hover {
+    transform: scale(1.2);
+    border-color: var(--got-gold);
+}
+
+/* Map Container */
+.map-container {
+    flex: 1;
+    position: relative;
+    background-color: #000;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+    background: #000;
+}
+
+/* Leaflet Overrides for Theme */
+.leaflet-container {
+    background: #000 !important;
+    font-family: 'Lato', sans-serif !important;
+}
+
+.leaflet-bar {
+    border: 1px solid var(--got-gold) !important;
+    box-shadow: none !important;
+}
+
+.leaflet-bar a {
+    background-color: var(--got-dark) !important;
+    color: var(--got-gold) !important;
+    border-bottom: 1px solid var(--got-gold) !important;
+}
+
+.leaflet-bar a:hover {
+    background-color: var(--got-gold-dim) !important;
+    color: #fff !important;
+}
+
+.leaflet-bar a:last-child {
+    border-bottom: none !important;
+}
+
+/* Popups */
+.leaflet-popup-content-wrapper, .leaflet-popup-tip {
+    background: var(--got-dark) !important;
+    color: var(--got-text) !important;
+    border: 1px solid var(--got-gold);
+    border-radius: 0 !important;
+}
+
+.leaflet-popup-content {
+    font-family: 'Lato', sans-serif;
+}
+
+.marker-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: var(--got-gold);
+}
+
+.marker-form input, .marker-form textarea {
+    width: 100%;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid #555;
+    color: #fff;
+    padding: 5px;
+    font-family: inherit;
+}
+
+.marker-form input:focus, .marker-form textarea:focus {
+    border-color: var(--got-gold);
+    outline: none;
+}
+
+.form-actions button {
+    background: transparent;
+    border: 1px solid #555;
+    color: #ccc;
+    padding: 4px 8px;
+    cursor: pointer;
+    margin-top: 5px;
+    font-size: 0.8rem;
+}
+
+.form-actions button:hover {
+    border-color: var(--got-gold);
+    color: var(--got-gold);
+}
+
+/* Context Menu */
+.map-context-menu {
+    position: absolute;
+    background: var(--got-dark);
+    border: 1px solid var(--got-gold);
+    padding: 5px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.8);
+}
+
+.map-context-menu.hidden {
+    display: none;
+}
+
+.menu-item {
+    background: transparent;
+    border: none;
+    color: var(--got-text);
+    padding: 8px 12px;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Cinzel', serif;
+    transition: background 0.2s;
+}
+
+.menu-item:hover {
+    background: var(--got-gold-dim);
+    color: #fff;
+}
+
+.menu-item img {
+    width: 20px;
+    height: 20px;
+    filter: sepia(1) hue-rotate(320deg) saturate(0.5); /* Make icons look a bit golden/brown */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .app-container {
+        flex-direction: column;
+    }
+    .sidebar {
+        width: 100%;
+        height: auto;
+        max-height: 40vh;
+        border-right: none;
+        border-bottom: 2px solid var(--got-gold);
+    }
+    .sidebar__header h1 {
+        font-size: 1.5rem;
+    }
+}
+
+/* Light Mode (Winter) */
+body.light-mode {
+    --got-dark: #f0f4f8;
+    --got-darker: #d9e2ec;
+    --got-text: #102a43;
+    --got-gold: #486581;
+    --got-gold-dim: #829ab1;
+    --got-red: #475569;
+}
+
+body.light-mode .map-container,
+body.light-mode #map,
+body.light-mode .leaflet-container {
+    background: #dbe7f0 !important;
+}
+
+body.light-mode .sidebar__header {
+    background: linear-gradient(to bottom, #bcccdc, var(--got-dark));
+    border-bottom: 1px solid var(--got-gold);
+}
+
+body.light-mode .sidebar__header h1 {
+    color: var(--got-text);
+    text-shadow: none;
+}
+
+body.light-mode .subtitle {
+    color: var(--got-gold);
+}
+
+body.light-mode .marker-form input, 
+body.light-mode .marker-form textarea {
+    background: #ffffff;
+    color: var(--got-text);
+    border-color: var(--got-gold-dim);
+}
+
+/* Leaflet Draw Icons Restoration */
+.leaflet-draw-toolbar a {
+    background-image: none !important;
+    position: relative;
+}
+
+.leaflet-draw-toolbar a::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 20px;
+    height: 20px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+
+.leaflet-draw-toolbar .leaflet-draw-draw-polyline::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpolyline points='5,20 12,10 20,16 24,8' fill='none' stroke='%23e2e8f0' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+.leaflet-draw-toolbar .leaflet-draw-draw-polygon::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpolygon points='6,20 6,10 18,6 22,16' fill='%23e2e8f0' fill-opacity='0.15' stroke='%23e2e8f0' stroke-width='2.5' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+.leaflet-draw-toolbar .leaflet-draw-draw-rectangle::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Crect x='6' y='8' width='16' height='12' fill='%23e2e8f0' fill-opacity='0.12' stroke='%23e2e8f0' stroke-width='2.5' rx='2'/%3E%3C/svg%3E");
+}
+
+.leaflet-draw-toolbar .leaflet-draw-draw-circle::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Ccircle cx='14' cy='14' r='7' fill='%23e2e8f0' fill-opacity='0.12' stroke='%23e2e8f0' stroke-width='2.5'/%3E%3C/svg%3E");
+}
+
+.leaflet-draw-toolbar .leaflet-draw-edit-edit::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpath d='M8 19l2.2-6.2L17 6l3 3-7 6.8z' fill='%23e2e8f0' fill-opacity='0.15' stroke='%23e2e8f0' stroke-width='2.3' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+.leaflet-draw-toolbar .leaflet-draw-edit-remove::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cline x1='8' y1='8' x2='20' y2='20' stroke='%23e2e8f0' stroke-width='2.5' stroke-linecap='round'/%3E%3Cline x1='8' y1='20' x2='20' y2='8' stroke='%23e2e8f0' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+
+body.light-mode .leaflet-draw-toolbar a::before {
+    filter: grayscale(1) brightness(0.4) contrast(1.2);
+}
