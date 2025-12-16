@@ -7,13 +7,26 @@
     const exportButton = document.getElementById("export-json");
     const importButton = document.getElementById("import-json");
     const importInput = document.getElementById("import-file");
-    const markerIcon = L.icon({
-        iconUrl: "static/img/pin.svg",
-        iconSize: [26, 32],
-        iconAnchor: [13, 32],
-        popupAnchor: [0, -28],
-        className: "westeros-pin",
-    });
+    const externalCanvas = window.paintCanvas;
+    const externalSyncCanvas = window.syncCanvas;
+
+    const pinOptions = [
+        { key: "dragon", label: "Dragão", iconUrl: "static/img/dragon.svg" },
+        { key: "pin", label: "Pin", iconUrl: "static/img/pin.svg" },
+        { key: "ship", label: "Navio", iconUrl: "static/img/ship.svg" },
+        { key: "wall", label: "Muralha", iconUrl: "static/img/wall.svg" },
+    ];
+    const markerIcons = pinOptions.reduce((acc, opt) => {
+        acc[opt.key] = L.icon({
+            iconUrl: opt.iconUrl,
+            iconSize: [26, 32],
+            iconAnchor: [13, 32],
+            popupAnchor: [0, -28],
+            className: `westeros-${opt.key}`,
+        });
+        return acc;
+    }, {});
+    const defaultIconKey = "pin";
     L.Icon.Default.mergeOptions({
         iconUrl: "static/img/pin.svg",
         iconRetinaUrl: "static/img/pin.svg",
@@ -22,11 +35,13 @@
         iconAnchor: [13, 32],
         popupAnchor: [0, -28],
     });
+
     const markers = [];
     let drawnItems = null;
     let drawControl = null;
     let markerCounter = 1;
     let mapInstance = null;
+    let contextMenu = null;
 
     function buildPopupContent(entry) {
         const { id, name, description, latlng } = entry;
@@ -86,6 +101,88 @@
         }
     }
 
+    function addMarkerAt(latlng, iconKey, options = {}) {
+        const entry = {
+            id: options.id ?? markerCounter++,
+            name: options.name ?? `Marcador ${markerCounter - 1}`,
+            description: options.description ?? "",
+            latlng,
+            iconKey: iconKey || options.iconKey || defaultIconKey,
+        };
+
+        const marker = L.marker(latlng, { icon: markerIcons[entry.iconKey] || markerIcons[defaultIconKey] }).addTo(mapInstance);
+        entry.marker = marker;
+        marker.bindPopup(buildPopupContent(entry), { autoPan: true });
+        marker.on("popupopen", (evt) => attachPopupHandlers(evt.popup, entry));
+
+        if (options.openPopup !== false) {
+            marker.openPopup();
+        }
+
+        markers.push(entry);
+        return entry;
+    }
+
+    function setupContextMenu(map) {
+        const container = map.getContainer();
+        const menu = document.createElement("div");
+        menu.className = "map-context-menu hidden";
+        menu.setAttribute("role", "menu");
+
+        pinOptions.forEach((option) => {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "menu-item";
+            button.dataset.icon = option.key;
+            button.setAttribute("role", "menuitem");
+            button.innerHTML = `
+                <img src="${option.iconUrl}" alt="" aria-hidden="true" />
+                <span>${option.label}</span>
+            `;
+            menu.appendChild(button);
+        });
+
+        container.appendChild(menu);
+        let targetLatLng = null;
+
+        const closeMenu = () => {
+            targetLatLng = null;
+            menu.classList.add("hidden");
+        };
+
+        const openMenu = (latlng, point) => {
+            targetLatLng = latlng;
+            menu.classList.remove("hidden");
+            menu.style.left = "0px";
+            menu.style.top = "0px";
+
+            const { clientWidth, clientHeight } = container;
+            const menuWidth = menu.offsetWidth || 0;
+            const menuHeight = menu.offsetHeight || 0;
+            const left = Math.min(Math.max(point.x, 8), clientWidth - menuWidth - 8);
+            const top = Math.min(Math.max(point.y, 8), clientHeight - menuHeight - 8);
+            menu.style.left = `${left}px`;
+            menu.style.top = `${top}px`;
+        };
+
+        menu.addEventListener("click", (evt) => {
+            const btn = evt.target.closest("button[data-icon]");
+            if (!btn || !targetLatLng) return;
+
+            addMarkerAt(targetLatLng, btn.dataset.icon);
+            closeMenu();
+        });
+
+        document.addEventListener("keydown", (evt) => {
+            if (evt.key === "Escape") {
+                closeMenu();
+            }
+        });
+
+        map.on("click zoomstart movestart", closeMenu);
+        return { open: openMenu, close: closeMenu };
+    }
+
     function initMap({ width, height }) {
         const bounds = [
             [0, 0],
@@ -107,27 +204,11 @@
         map.addLayer(drawnItems);
 
         addDrawControl();
+        contextMenu = setupContextMenu(map);
 
         map.on("contextmenu", (event) => {
             event.originalEvent?.preventDefault();
-            const entry = {
-                id: markerCounter++,
-                name: `Marcador ${markerCounter - 1}`,
-                description: "",
-                latlng: event.latlng,
-            };
-
-            const marker = L.marker(event.latlng, { icon: markerIcon }).addTo(map);
-            entry.marker = marker;
-            marker.bindPopup(buildPopupContent(entry), { autoPan: true }).openPopup();
-
-            // Garante handlers já no primeiro abrir e em reaberturas
-            const initialPopup = marker.getPopup();
-            if (initialPopup) {
-                attachPopupHandlers(initialPopup, entry);
-            }
-            marker.on("popupopen", (evt) => attachPopupHandlers(evt.popup, entry));
-            markers.push(entry);
+            contextMenu?.open(event.latlng, event.containerPoint ?? map.latLngToContainerPoint(event.latlng));
         });
 
         clearMarkersButton?.addEventListener("click", clearMarkers);
@@ -215,6 +296,7 @@
                 description: m.description,
                 lat: m.latlng.lat,
                 lng: m.latlng.lng,
+                iconKey: m.iconKey || defaultIconKey,
             })),
             drawings: exportDrawings(),
         };
@@ -288,18 +370,12 @@
 
     function addImportedMarker(m) {
         if (!m || typeof m.lat !== "number" || typeof m.lng !== "number") return;
-        const entry = {
-            id: m.id ?? markerCounter++,
-            name: m.name || `Marcador ${markerCounter}`,
-            description: m.description || "",
-            latlng: L.latLng(m.lat, m.lng),
-        };
-
-        const marker = L.marker(entry.latlng, { icon: markerIcon }).addTo(mapInstance);
-        entry.marker = marker;
-        marker.bindPopup(buildPopupContent(entry), { autoPan: true });
-        marker.on("popupopen", (evt) => attachPopupHandlers(evt.popup, entry));
-        markers.push(entry);
+        addMarkerAt(L.latLng(m.lat, m.lng), m.iconKey || defaultIconKey, {
+            id: m.id,
+            name: m.name,
+            description: m.description,
+            openPopup: false,
+        });
     }
 
     function addImportedDrawings(features) {
@@ -311,8 +387,8 @@
     }
 
     function toggleCanvasVisibility(show) {
-        if (!paintCanvas) return;
-        paintCanvas.style.display = show ? "block" : "none";
+        if (!externalCanvas) return;
+        externalCanvas.style.display = show ? "block" : "none";
     }
 
     function bootstrap() {
@@ -322,7 +398,9 @@
         probe.onload = () => {
             initMap({ width: probe.naturalWidth, height: probe.naturalHeight });
             // revalida tamanho da camada de pintura após o mapa definir o layout
-            setTimeout(syncCanvas, 100);
+            if (typeof externalSyncCanvas === "function") {
+                setTimeout(externalSyncCanvas, 100);
+            }
         };
 
         probe.onerror = () => {
