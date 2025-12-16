@@ -2,6 +2,7 @@
     const imageUrl = window.WESTEROS_IMAGE;
     const clearMarkersButton = document.getElementById("clear-markers");
     const clearDrawButton = document.getElementById("clear-draw");
+    const themeToggleButton = document.getElementById("theme-toggle");
     const drawColorInput = document.getElementById("draw-color");
     const swatches = document.querySelectorAll(".swatch[data-color]");
     const exportButton = document.getElementById("export-json");
@@ -213,6 +214,12 @@
 
         clearMarkersButton?.addEventListener("click", clearMarkers);
         clearDrawButton?.addEventListener("click", clearDrawings);
+        themeToggleButton?.addEventListener("click", () => {
+            document.body.classList.toggle("light-mode");
+            themeToggleButton.textContent = document.body.classList.contains("light-mode") 
+                ? "Modo Escuro" 
+                : "Modo Claro";
+        });
         drawColorInput?.addEventListener("change", resetDrawControl);
         swatches.forEach((swatch) => {
             swatch.addEventListener("click", () => selectSwatchColor(swatch.dataset.color));
