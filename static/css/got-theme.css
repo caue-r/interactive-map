@@ -375,6 +375,11 @@ body.light-mode .marker-form textarea {
     border-color: var(--got-gold-dim);
 }
 
+body.light-mode #icon-size {
+    background: var(--got-darker);
+    border: 1px solid var(--got-gold-dim);
+}
+
 /* Leaflet Draw Icons Restoration */
 .leaflet-draw-toolbar a {
     background-image: none !important;
@@ -420,3 +425,56 @@ body.light-mode .marker-form textarea {
 body.light-mode .leaflet-draw-toolbar a::before {
     filter: grayscale(1) brightness(0.4) contrast(1.2);
 }
+
+#icon-size {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 8px; /* Aumentar a espessura da barra */
+    background: linear-gradient(to right, #4a4a4a, #2a2a2a); /* Gradiente metálico */
+    border: 1px solid #1a1a1a;
+    border-radius: 2px; /* Cantos menos arredondados */
+    outline: none;
+    transition: opacity 0.2s;
+    cursor: pointer;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.5); /* Sombra interna para profundidade */
+}
+
+#icon-size::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px; /* Ligeiramente maior */
+    height: 22px;
+    background: linear-gradient(to bottom, var(--got-gold), #b3a378); /* Ouro com gradiente */
+    border: 2px solid #1a1a1a; /* Borda escura e forte */
+    border-radius: 3px; /* Quadrado com cantos suaves */
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 0 5px rgba(0,0,0,0.7); /* Sombra para destacar */
+}
+
+#icon-size::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    background: linear-gradient(to bottom, var(--got-gold), #b3a378);
+    border: 2px solid #1a1a1a;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 0 5px rgba(0,0,0,0.7);
+}
+
+#icon-size:hover::-webkit-slider-thumb,
+#icon-size:focus::-webkit-slider-thumb {
+    background: #fff; /* Destaque ao interagir */
+    border-color: var(--got-gold);
+    box-shadow: 0 0 10px var(--got-gold);
+}
+
+#icon-size:hover::-moz-range-thumb,
+#icon-size:focus::-moz-range-thumb {
+    background: #fff;
+    border-color: var(--got-gold);
+    box-shadow: 0 0 10px var(--got-gold);
+}
+
