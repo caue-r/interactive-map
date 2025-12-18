@@ -305,6 +305,22 @@ h1, h2, h3, .hero__pill, button {
     filter: sepia(1) hue-rotate(320deg) saturate(0.5); /* Make icons look a bit golden/brown */
 }
 
+.map-context-menu .menu-item[data-icon="dragon"] img,
+.map-context-menu .menu-item[data-icon="mountain"] img,
+.map-context-menu .menu-item[data-icon="shield"] img,
+.map-context-menu .menu-item[data-icon="swords"] img,
+.map-context-menu .menu-item[data-icon="guerreiro"] img {
+    filter: brightness(0) invert(1) drop-shadow(0 0 1px #000) drop-shadow(0 0 2px #000);
+}
+
+.leaflet-marker-icon.westeros-dragon,
+.leaflet-marker-icon.westeros-mountain,
+.leaflet-marker-icon.westeros-shield,
+.leaflet-marker-icon.westeros-swords,
+.leaflet-marker-icon.westeros-guerreiro {
+    filter: brightness(0) invert(1) drop-shadow(0 0 2px #000) drop-shadow(0 0 4px #000);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .app-container {

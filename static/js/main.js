@@ -13,6 +13,10 @@
 
     const pinOptions = [
         { key: "dragon", label: "Dragão", iconUrl: "static/img/dragon.svg" },
+        { key: "mountain", label: "Montanha", iconUrl: "static/img/mountain.svg" },
+        { key: "shield", label: "Escudo", iconUrl: "static/img/shield.svg" },
+        { key: "swords", label: "Espadas", iconUrl: "static/img/swords.svg" },
+        { key: "guerreiro", label: "Guerreiro", iconUrl: "static/img/warrior.svg" },
         { key: "pin", label: "Pin", iconUrl: "static/img/pin.svg" },
         { key: "ship", label: "Navio", iconUrl: "static/img/ship.svg" },
         { key: "wall", label: "Muralha", iconUrl: "static/img/wall.svg" },
@@ -20,9 +24,9 @@
     const markerIcons = pinOptions.reduce((acc, opt) => {
         acc[opt.key] = L.icon({
             iconUrl: opt.iconUrl,
-            iconSize: [26, 32],
-            iconAnchor: [13, 32],
-            popupAnchor: [0, -28],
+            iconSize: [75, 92],
+            iconAnchor: [38, 92],
+            popupAnchor: [0, -80],
             className: `westeros-${opt.key}`,
         });
         return acc;
@@ -32,9 +36,9 @@
         iconUrl: "static/img/pin.svg",
         iconRetinaUrl: "static/img/pin.svg",
         shadowUrl: null,
-        iconSize: [26, 32],
-        iconAnchor: [13, 32],
-        popupAnchor: [0, -28],
+        iconSize: [75, 92],
+        iconAnchor: [38, 92],
+        popupAnchor: [0, -80],
     });
 
     const markers = [];
