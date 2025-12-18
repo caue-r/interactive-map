@@ -4,6 +4,8 @@
     const clearDrawButton = document.getElementById("clear-draw");
     const themeToggleButton = document.getElementById("theme-toggle");
     const drawColorInput = document.getElementById("draw-color");
+    const iconSizeInput = document.getElementById("icon-size");
+    const iconSizeValue = document.getElementById("icon-size-value");
     const swatches = document.querySelectorAll(".swatch[data-color]");
     const exportButton = document.getElementById("export-json");
     const importButton = document.getElementById("import-json");
@@ -21,25 +23,39 @@
         { key: "ship", label: "Navio", iconUrl: "static/img/ship.svg" },
         { key: "wall", label: "Muralha", iconUrl: "static/img/wall.svg" },
     ];
-    const markerIcons = pinOptions.reduce((acc, opt) => {
-        acc[opt.key] = L.icon({
-            iconUrl: opt.iconUrl,
-            iconSize: [75, 92],
-            iconAnchor: [38, 92],
-            popupAnchor: [0, -80],
-            className: `westeros-${opt.key}`,
-        });
-        return acc;
-    }, {});
+    const baseIconSize = [65, 80];
+    const baseIconAnchor = [33, 80];
+    const basePopupAnchor = [0, -70];
     const defaultIconKey = "pin";
-    L.Icon.Default.mergeOptions({
-        iconUrl: "static/img/pin.svg",
-        iconRetinaUrl: "static/img/pin.svg",
-        shadowUrl: null,
-        iconSize: [75, 92],
-        iconAnchor: [38, 92],
-        popupAnchor: [0, -80],
-    });
+    let markerIcons = {};
+
+    const scalePair = (pair, scale) => pair.map((value) => Math.round(value * scale));
+    const buildMarkerIcons = (scale) =>
+        pinOptions.reduce((acc, opt) => {
+            acc[opt.key] = L.icon({
+                iconUrl: opt.iconUrl,
+                iconSize: scalePair(baseIconSize, scale),
+                iconAnchor: scalePair(baseIconAnchor, scale),
+                popupAnchor: scalePair(basePopupAnchor, scale),
+                className: `westeros-${opt.key}`,
+            });
+            return acc;
+        }, {});
+
+    const applyIconScale = (scale) => {
+        markerIcons = buildMarkerIcons(scale);
+        L.Icon.Default.mergeOptions({
+            iconUrl: "static/img/pin.svg",
+            iconRetinaUrl: "static/img/pin.svg",
+            shadowUrl: null,
+            iconSize: scalePair(baseIconSize, scale),
+            iconAnchor: scalePair(baseIconAnchor, scale),
+            popupAnchor: scalePair(basePopupAnchor, scale),
+        });
+        markers.forEach((entry) => {
+            entry.marker.setIcon(markerIcons[entry.iconKey] || markerIcons[defaultIconKey]);
+        });
+    };
 
     const markers = [];
     let drawnItems = null;
@@ -47,6 +63,8 @@
     let markerCounter = 1;
     let mapInstance = null;
     let contextMenu = null;
+
+    applyIconScale(1);
 
     function buildPopupContent(entry) {
         const { id, name, description, latlng } = entry;
@@ -224,6 +242,18 @@
                 ? "Modo Escuro" 
                 : "Modo Claro";
         });
+
+        if (iconSizeInput) {
+            const updateIconScale = () => {
+                const scale = Number.parseFloat(iconSizeInput.value) || 1;
+                if (iconSizeValue) {
+                    iconSizeValue.textContent = `${scale.toFixed(1)}x`;
+                }
+                applyIconScale(scale);
+            };
+            iconSizeInput.addEventListener("input", updateIconScale);
+            updateIconScale();
+        }
         drawColorInput?.addEventListener("change", resetDrawControl);
         swatches.forEach((swatch) => {
             swatch.addEventListener("click", () => selectSwatchColor(swatch.dataset.color));
