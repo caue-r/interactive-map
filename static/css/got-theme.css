@@ -189,6 +189,42 @@ h1, h2, h3, .hero__pill, button {
     background: #000;
 }
 
+.measure-label {
+    background: rgba(7, 10, 16, 0.9);
+    color: var(--got-gold);
+    border: 1px solid var(--got-gold-dim);
+    border-radius: 4px;
+    padding: 4px 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    font-size: 12px;
+    text-align: center;
+}
+
+.map-scale {
+    pointer-events: none;
+    background: rgba(7, 10, 16, 0.85);
+    color: var(--got-gold);
+    border: 1px solid var(--got-gold-dim);
+    padding: 8px 10px 6px;
+    border-radius: 4px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+    min-width: 140px;
+}
+
+.map-scale__bar {
+    height: 6px;
+    background: linear-gradient(90deg, var(--got-gold) 0%, #f5e6bf 55%, var(--got-gold) 100%);
+    border: 1px solid var(--got-gold-dim);
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.35);
+    margin-bottom: 6px;
+}
+
+.map-scale__label {
+    font-size: 12px;
+    text-align: center;
+    letter-spacing: 0.5px;
+}
+
 /* Leaflet Overrides for Theme */
 .leaflet-container {
     background: #000 !important;

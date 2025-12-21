@@ -12,6 +12,19 @@
     const importInput = document.getElementById("import-file");
     const externalCanvas = window.paintCanvas;
     const externalSyncCanvas = window.syncCanvas;
+    // Escala ajustada: 1 px ≈ 1.5 km
+    const WALL_LENGTH_KM = 483;
+    const WALL_LENGTH_PX = WALL_LENGTH_KM / 1.5;
+    const KM_PER_PIXEL = WALL_LENGTH_KM / WALL_LENGTH_PX;
+    // Ajusta a função de distância do CRS simples para refletir a escala (retorna metros)
+    L.CRS.Simple.distance = (a, b) => {
+        const dx = b.lng - a.lng;
+        const dy = b.lat - a.lat;
+        const pxDistance = Math.hypot(dx, dy);
+        return pxDistance * KM_PER_PIXEL * 1000;
+    };
+    const kmFromPx = (px) => px * KM_PER_PIXEL;
+    const km2FromPx2 = (px2) => px2 * KM_PER_PIXEL * KM_PER_PIXEL;
 
     const pinOptions = [
         { key: "dragon", label: "Dragão", iconUrl: "static/img/dragon.svg" },
@@ -228,6 +241,7 @@
 
         addDrawControl();
         contextMenu = setupContextMenu(map);
+        addScaleControl(map, { width, height, kmPerPixel: KM_PER_PIXEL });
 
         map.on("contextmenu", (event) => {
             event.originalEvent?.preventDefault();
@@ -314,6 +328,12 @@
                 event.layer.setStyle(shapeOptions());
             }
             drawnItems.addLayer(event.layer);
+            attachMeasurement(event.layer);
+        });
+
+        mapInstance?.off(L.Draw.Event.EDITED);
+        mapInstance?.on(L.Draw.Event.EDITED, (event) => {
+            event.layers?.eachLayer((layer) => attachMeasurement(layer));
         });
     }
 
@@ -325,6 +345,51 @@
         if (!color || !drawColorInput) return;
         drawColorInput.value = color;
         drawColorInput.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+
+    function addScaleControl(map, { width, height, kmPerPixel }) {
+        const targetKmOptions = [25, 50, 100, 200, 400];
+        const control = L.control({ position: "bottomleft" });
+        let barEl = null;
+        let labelEl = null;
+
+        const mapUnitsForKm = (km) => km / kmPerPixel;
+        const computeScreenWidth = (km) => {
+            const origin = map.latLngToLayerPoint([height - 80, 80]);
+            const dest = map.latLngToLayerPoint([height - 80, 80 + mapUnitsForKm(km)]);
+            return Math.abs(dest.x - origin.x);
+        };
+
+        const updateScale = () => {
+            let chosenKm = targetKmOptions[targetKmOptions.length - 1];
+            for (const km of targetKmOptions) {
+                const widthPx = computeScreenWidth(km);
+                if (widthPx >= 70 && widthPx <= 160) {
+                    chosenKm = km;
+                    break;
+                }
+            }
+
+            const widthPx = computeScreenWidth(chosenKm);
+            if (barEl) {
+                barEl.style.width = `${Math.round(widthPx)}px`;
+            }
+            if (labelEl) {
+                labelEl.textContent = `${chosenKm} km (1 px ≈ ${kmPerPixel.toFixed(2)} km)`;
+            }
+        };
+
+        control.onAdd = () => {
+            const container = L.DomUtil.create("div", "map-scale");
+            barEl = L.DomUtil.create("div", "map-scale__bar", container);
+            labelEl = L.DomUtil.create("div", "map-scale__label", container);
+            labelEl.textContent = "Escala";
+            return container;
+        };
+
+        control.addTo(map);
+        map.on("zoomend", updateScale);
+        map.whenReady(updateScale);
     }
 
     function exportJson() {
@@ -372,6 +437,92 @@
             fillColor: options.fillColor || options.color || drawColorInput?.value || "#f59e0b",
             fillOpacity: options.fillOpacity ?? 0.3,
         };
+    }
+
+    function attachMeasurement(layer) {
+        if (!layer || !mapInstance) return;
+
+        const removeExisting = () => {
+            if (layer._measureTooltip) {
+                layer.unbindTooltip(layer._measureTooltip);
+                layer._measureTooltip = null;
+            }
+        };
+
+        const text = buildMeasurementText(layer);
+        removeExisting();
+        if (!text) return;
+
+        layer._measureTooltip = layer
+            .bindTooltip(text, {
+                permanent: false,
+                direction: "center",
+                className: "measure-label",
+                opacity: 0.9,
+                sticky: true,
+            });
+    }
+
+    function buildMeasurementText(layer) {
+        if (layer instanceof L.Circle) {
+            const radiusKm = kmFromPx(layer.getRadius());
+            const areaKm2 = Math.PI * radiusKm * radiusKm;
+            return `Raio: ${radiusKm.toFixed(1)} km · Área: ${areaKm2.toFixed(1)} km²`;
+        }
+
+        if (layer instanceof L.Rectangle || layer instanceof L.Polygon) {
+            const latlngs = normalizeLatLngs(layer.getLatLngs());
+            if (!latlngs.length) return null;
+            const perimeter = polylineLengthKm(latlngs, true);
+            const area = polygonAreaKm2(latlngs);
+            return `Perímetro: ${perimeter.toFixed(1)} km · Área: ${area.toFixed(1)} km²`;
+        }
+
+        if (layer instanceof L.Polyline) {
+            const latlngs = normalizeLatLngs(layer.getLatLngs());
+            if (!latlngs.length) return null;
+            const lengthKm = polylineLengthKm(latlngs);
+            return `Comprimento: ${lengthKm.toFixed(1)} km`;
+        }
+
+        return null;
+    }
+
+    function normalizeLatLngs(latlngs) {
+        if (!Array.isArray(latlngs)) return [];
+        const flat = Array.isArray(latlngs[0]) ? latlngs[0] : latlngs;
+        if (!flat.length) return [];
+        const first = flat[0];
+        const last = flat[flat.length - 1];
+        if (first.lat === last.lat && first.lng === last.lng && flat.length > 1) {
+            return flat.slice(0, -1);
+        }
+        return flat;
+    }
+
+    function polylineLengthKm(latlngs, closeLoop = false) {
+        if (!Array.isArray(latlngs) || latlngs.length < 2) return 0;
+        let total = 0;
+        const points = closeLoop ? [...latlngs, latlngs[0]] : latlngs;
+        for (let i = 1; i < points.length; i += 1) {
+            const a = points[i - 1];
+            const b = points[i];
+            const dx = b.lng - a.lng;
+            const dy = b.lat - a.lat;
+            total += Math.hypot(dx, dy);
+        }
+        return kmFromPx(total);
+    }
+
+    function polygonAreaKm2(latlngs) {
+        if (!Array.isArray(latlngs) || latlngs.length < 3) return 0;
+        let areaPx2 = 0;
+        for (let i = 0; i < latlngs.length; i += 1) {
+            const j = (i + 1) % latlngs.length;
+            areaPx2 += latlngs[i].lng * latlngs[j].lat - latlngs[j].lng * latlngs[i].lat;
+        }
+        const area = Math.abs(areaPx2) * 0.5;
+        return km2FromPx2(area);
     }
 
     function handleImportFile(event) {
@@ -424,7 +575,10 @@
         const geoJson = L.geoJSON(features, {
             style: (feature) => feature?.properties?.style || shapeOptions(),
         });
-        geoJson.eachLayer((layer) => drawnItems.addLayer(layer));
+        geoJson.eachLayer((layer) => {
+            drawnItems.addLayer(layer);
+            attachMeasurement(layer);
+        });
     }
 
     function toggleCanvasVisibility(show) {

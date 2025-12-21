@@ -14,6 +14,7 @@ Troque a imagem base substituindo `static/img/Westeros.png`.
 - Marcadores (botão direito) com popup para nome e descrição.
 - Barra de desenho (Leaflet.draw) para linhas, polígonos, retângulos e círculos, com edição/remoção.
 - Botões para limpar marcadores e desenhos.
+- Escala configurada: 1 px ≈ 1,5 km (derivada do comprimento da Muralha).
 
 ## Estrutura
 
