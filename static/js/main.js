@@ -146,10 +146,17 @@
             iconKey: iconKey || options.iconKey || defaultIconKey,
         };
 
-        const marker = L.marker(latlng, { icon: markerIcons[entry.iconKey] || markerIcons[defaultIconKey] }).addTo(mapInstance);
+        const marker = L.marker(latlng, {
+            icon: markerIcons[entry.iconKey] || markerIcons[defaultIconKey],
+            draggable: true,
+        }).addTo(mapInstance);
         entry.marker = marker;
         marker.bindPopup(buildPopupContent(entry), { autoPan: true });
         marker.on("popupopen", (evt) => attachPopupHandlers(evt.popup, entry));
+        marker.on("dragend", () => {
+            entry.latlng = marker.getLatLng();
+            marker.setPopupContent(buildPopupContent(entry));
+        });
 
         if (options.openPopup !== false) {
             marker.openPopup();
