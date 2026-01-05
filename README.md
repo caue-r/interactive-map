@@ -1,13 +1,13 @@
 # Mapa Interativo (estático)
 
-Protótipo estático de um mapa customizado usando Leaflet e Leaflet.draw com a imagem `Westeros.png`.
+Protótipo estático de um mapa customizado usando Leaflet e Leaflet.draw com a imagem `KnownWorld.png`.
 
 ## Como rodar
 
 - Opção 1: abra `index.html` diretamente no navegador (funciona sem servidor).
 - Opção 2: sirva como site estático (`npx serve .` ou extensão Live Server).
 
-Troque a imagem base substituindo `static/img/Westeros.png`.
+Troque a imagem base substituindo `static/img/KnownWorld.png`.
 
 ## Funcionalidades
 
@@ -23,5 +23,5 @@ Troque a imagem base substituindo `static/img/Westeros.png`.
 - `static/css/styles.css`: tema e layout.
 - `static/js/leaflet.js` e `static/css/leaflet.css`: Leaflet local.
 - `static/js/leaflet.draw.js` e `static/css/leaflet.draw.css`: Leaflet.draw local.
-- `static/img/Westeros.png`: imagem do mapa.
+- `static/img/KnownWorld.png`: imagem do mapa.
 - `static/img/pin.svg`: ícone usado nos marcadores.

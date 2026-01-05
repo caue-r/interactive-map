@@ -1,5 +1,5 @@
 (() => {
-    const imageUrl = window.WESTEROS_IMAGE;
+    const imageUrl = window.KNOWN_WORLD_IMAGE;
     const clearMarkersButton = document.getElementById("clear-markers");
     const clearDrawButton = document.getElementById("clear-draw");
     const themeToggleButton = document.getElementById("theme-toggle");
@@ -50,7 +50,7 @@
                 iconSize: scalePair(baseIconSize, scale),
                 iconAnchor: scalePair(baseIconAnchor, scale),
                 popupAnchor: scalePair(basePopupAnchor, scale),
-                className: `westeros-${opt.key}`,
+                className: `known-world-${opt.key}`,
             });
             return acc;
         }, {});
@@ -418,7 +418,7 @@
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
-        a.download = "mapa-westeros.json";
+        a.download = "mapa-known-world.json";
         a.click();
         URL.revokeObjectURL(url);
     }
@@ -607,7 +607,7 @@
 
         probe.onerror = () => {
             const mapContainer = document.getElementById("map");
-            mapContainer.innerHTML = "<p style='padding:12px'>Não foi possível carregar a imagem do mapa. Verifique se o arquivo static/img/Westeros.png existe.</p>";
+            mapContainer.innerHTML = "<p style='padding:12px'>Não foi possível carregar a imagem do mapa. Verifique se o arquivo static/img/KnownWorld.png existe.</p>";
         };
     }
 
