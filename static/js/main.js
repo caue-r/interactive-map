@@ -16,13 +16,6 @@
     const WALL_LENGTH_KM = 483;
     const WALL_LENGTH_PX = WALL_LENGTH_KM / 1.5;
     const KM_PER_PIXEL = WALL_LENGTH_KM / WALL_LENGTH_PX;
-    // Ajusta a função de distância do CRS simples para refletir a escala (retorna metros)
-    L.CRS.Simple.distance = (a, b) => {
-        const dx = b.lng - a.lng;
-        const dy = b.lat - a.lat;
-        const pxDistance = Math.hypot(dx, dy);
-        return pxDistance * KM_PER_PIXEL * 1000;
-    };
     const kmFromPx = (px) => px * KM_PER_PIXEL;
     const km2FromPx2 = (px2) => px2 * KM_PER_PIXEL * KM_PER_PIXEL;
 
